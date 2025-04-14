@@ -1,0 +1,251 @@
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #ffffff;
+  color: #333;
+  position: relative;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.chat-messages {
+  flex-grow: 1;
+  padding: 2rem 1.5rem;
+  padding-bottom: 100px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.message {
+  max-width: 75%;
+  padding: 1.25rem;
+  border-radius: 16px;
+  animation: fadeIn 0.3s ease-in;
+  line-height: 1.6;
+  position: relative;
+  margin: 0.5rem 0;
+}
+
+.message.user {
+  align-self: flex-end;
+  background-color: #007bff;
+  color: white;
+  margin-left: 15%;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+}
+
+.message.system {
+  align-self: flex-start;
+  background-color: #f8f9fa;
+  color: #333;
+  margin-right: 15%;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+}
+
+.message-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.message-content p {
+  margin: 0;
+  padding: 0;
+}
+
+.sql-code {
+  background-color: #f8f9fa;
+  padding: 1.25rem;
+  border-radius: 8px;
+  color: #333;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  white-space: pre-wrap;
+  margin: 0.75rem 0;
+  border: 1px solid #e9ecef;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.chat-input-form {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid #e9ecef;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.chat-input {
+  flex-grow: 1;
+  padding: 1rem 1.25rem;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  font-size: 1rem;
+  background-color: #fff;
+  color: #333;
+  transition: all 0.2s ease;
+  line-height: 1.5;
+  resize: none;
+  height: 48px;
+  max-height: 200px;
+  min-height: 48px;
+}
+
+.chat-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+  background-color: #fff;
+}
+
+.chat-input::placeholder {
+  color: #6c757d;
+}
+
+.send-button {
+  padding: 0 1.5rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  height: 48px;
+}
+
+.send-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+}
+
+.send-button:active {
+  transform: translateY(0);
+}
+
+/* Custom scrollbar */
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: #f8f9fa;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: #dee2e6;
+  border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background: #adb5bd;
+}
+
+/* Responsive Design */
+@media (max-width: 1440px) {
+  .chat-container,
+  .chat-input-form {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .chat-messages {
+    padding: 1.25rem 1rem;
+    padding-bottom: 90px;
+    gap: 1.25rem;
+  }
+
+  .message {
+    max-width: 85%;
+    padding: 1rem;
+  }
+
+  .chat-input-form {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+
+  .chat-input {
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+    height: 44px;
+    min-height: 44px;
+  }
+
+  .send-button {
+    padding: 0 1.25rem;
+    min-width: 100px;
+    height: 44px;
+  }
+
+  .sql-code {
+    font-size: 0.85rem;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-messages {
+    padding: 1rem 0.75rem;
+    padding-bottom: 160px;
+  }
+
+  .message {
+    max-width: 90%;
+    padding: 0.875rem;
+    font-size: 0.95rem;
+  }
+
+  .chat-input-form {
+    padding: 0.75rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .chat-input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .send-button {
+    width: 100%;
+  }
+
+  .sql-code {
+    margin: 0.5rem 0;
+    padding: 0.875rem;
+    font-size: 0.8rem;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -150,7 +150,9 @@ def main():
                         results = process_query(nl_query, table_schemas)
                     
                     if results:
+                        st.toast("Success! 🎉")
                         st.balloons()
+                        # st.snow()
             else:
                 st.warning("Please enter a natural language query.")
 

@@ -13,7 +13,7 @@ GROQ_API_KEY_1 = os.getenv("GROQ_API_KEY_RAG")
 GROQ_API_KEY_2 = os.getenv("GROQ_API_KEY_RAG_2")
 GROQ_API_KEY_3 = os.getenv("GROQ_API_KEY_SHIVAM")
 GROQ_API_KEY = GROQ_API_KEY_1
-MODEL="llama-3.1-8b-instant"
+MODEL="qwen-2.5-32b"
 
 api_key_list = [GROQ_API_KEY_1, GROQ_API_KEY_2, GROQ_API_KEY_3]
 current_index = 0
@@ -41,6 +41,7 @@ def call_groq_api(api_key, model, messages, temperature=0.2, max_tokens=8000, n=
     global current_index
     current_index = (current_index + 1) % len(api_key_list)
     api_key = api_key_list[current_index]
+    # print("Using API Key:", api_key)
 
     global total_tokens
     url = "https://api.groq.com/openai/v1/chat/completions"
@@ -102,7 +103,7 @@ def table_agent(raw_user_query, possible_tables):
             OUTPUT FORMAT:
             - Return only a comma-separated list of table names (e.g., "table1,table2,table3")
             - Ensure each table name exactly matches the name in the schema
-            - Do not include any explanations, quotes, brackets, or additional text
+            - Do not include any explanations, quotes, brackets, note, or additional text
 
             Your task is critical as subsequent processing will rely on your table selection.
             """
@@ -114,7 +115,7 @@ def table_agent(raw_user_query, possible_tables):
         }
     ]
 
-    response, table_agent_token = call_groq_api(GROQ_API_KEY ,MODEL,messages)
+    response, table_agent_token = call_groq_api(GROQ_API_KEY ,MODEL,messages,temperature=0.06)
 
     print("Table agent completed.")
 

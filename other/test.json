@@ -1,4 +1,69 @@
-{
-    "customerInfo": "THis table contains information about theb customers.....",
-    "first_name string 50 erer": "this column represents the users first neme"
-}
+[
+     {
+          "NL": "Find the average time spent on the website by users who clicked on a push notification and completed a survey.",
+          "Query": "SELECT AVG(time_spent_seconds) FROM events WHERE push_notification_clicked = true AND survey_completed = true;"
+        },
+        {
+          "NL": "Get the count of wishlist items for each user and sort them in descending order.",
+          "Query": "SELECT fk_user_id, COUNT(*) as wishlist_count FROM wishlist GROUP BY fk_user_id ORDER BY wishlist_count DESC"
+        },
+        {
+          "NL": "Find the products in the cart that have a promotional discounted price less than $50, along with the customer's loyalty program tier level and the customer's accumulated loyalty points balance.",
+          "Query": "SELECT T1.product_display_name, T3.accumulated_loyalty_points_balance, T3.loyalty_program_tier_level FROM products AS T1 INNER JOIN cart AS T2 ON T1.unique_product_identifier = T2.fk_product_id INNER JOIN customers_loyalty_program AS T3 ON T2.fk_user_id = T3.associated_customer_reference_id WHERE T1.promotional_discounted_price < 50"
+        },{
+          "NL": "Find the number of suppliers for each country of operation, sorted in descending order.",
+          "Query": "SELECT supplier_country_of_operation, COUNT(supplier_unique_identifier) FROM suppliers GROUP BY supplier_country_of_operation ORDER BY COUNT(supplier_unique_identifier) DESC;"
+        },
+        {
+          "NL": "Retrieve the total refund amount and the date when the refund was processed for orders that had events marked as 'Return'.",
+          "Query": "SELECT rf.refund_amount, rf.processed_date FROM refunds_returns rf JOIN events e ON rf.fk_order_id = e.order_id WHERE e.event_type = 'Return';"
+        },
+        {
+          "NL": "Find the total number of customers who are eligible for special promotions.",
+          "Query": "SELECT count(*) FROM customers_loyalty_program WHERE eligible_for_special_promotions = TRUE;"
+        },
+        {
+          "NL": "Find all products that have a standard retail price greater than 200 and an available stock quantity in units greater than 10",
+          "Query": "SELECT * FROM products WHERE standard_retail_price_including_tax > 200 AND available_stock_quantity_in_units > 10"
+        },
+        {
+          "NL": "List all the customers who have two-factor authentication enabled and their loyalty points",
+          "Query": "SELECT person_customer_id, person_loyalty_points FROM customerinfo WHERE securitytwo_factor_enabled = TRUE"
+        },
+        {
+          "NL": "What is the average total transaction amount for orders with a total amount greater than $1000, and what is the average number of loyalty points earned for these transactions, considering only customers who have participated in the exclusive beta testing program and have a loyalty membership unique identifier greater than 5000, and have made a payment using the same billing and shipping address, and have not had any chargeback requests, and their transaction status is 'completed', and the transaction date and time is within the last 6 months?",
+          "Query": "SELECT AVG(T.total_transaction_amount), AVG(T.associated_loyalty_points_earned) FROM transactions_and_payments T INNER JOIN orders O ON T.linked_order_reference_identifier = O.order_id INNER JOIN customers_loyalty_program C ON T.corresponding_customer_reference_identifier = C.associated_customer_reference_id WHERE O.total_amount > 1000 AND C.participation_in_exclusive_beta_testing = TRUE AND C.loyalty_membership_unique_identifier > 5000 AND T.billing_address_street = T.shipping_address_street AND T.billing_address_city = T.shipping_address_city AND T.billing_address_state = T.shipping_address_state AND T.billing_address_country = T.shipping_address_country AND T.billing_address_zip_code = T.shipping_address_zip_code AND T.chargeback_request_status = FALSE AND T.transaction_status = 'completed' AND T.transaction_date_and_time > NOW() - INTERVAL '6 month'"
+        },
+        {
+          "NL": "Analyze the inventory data to identify products that are frequently restocked but have low sales volume. Specifically, find products that have been restocked more than 5 times in the last year, have a stock turnover rate less than 0.5, and have not been part of any completed orders within the last year. Additionally, include the last updated timestamp, expiry date, and the total quantity sold for each product.",
+          "Query": "SELECT i.id, i.referenced_product_id, i.last_updated, i.expiry_date, COALESCE(SUM(oi.quantity), 0) AS total_quantity_sold FROM inventory i LEFT JOIN order_items oi ON i.referenced_product_id = oi.product_id WHERE i.last_restock_date > NOW() - INTERVAL '1 year' AND i.inventory_turnover_rate < 0.5 AND (oi.order_id IS NULL OR oi.order_item_id IS NULL OR oi.item_status = 'cancelled' OR oi.item_status = 'returned') GROUP BY i.id HAVING COUNT(i.last_restock_date) > 5 ORDER BY total_quantity_sold ASC;"
+        },
+        {
+          "NL": "Retrieve the average time spent on the site by customers who clicked on a promotion email and placed an order.",
+          "Query": "SELECT AVG(e.time_spent_seconds) AS avg_time_spent FROM events e JOIN orders o ON e.order_id = o.order_id WHERE e.email_opened = TRUE AND e.event_type = 'promotion_click';"
+        },
+        {
+          "NL": "List the number of customers grouped by their marital status and average income.",
+          "Query": "SELECT person_marital_status, AVG(person_income) FROM customerinfo GROUP BY person_marital_status"
+        },
+        {
+          "NL": "Retrieve the total discounted price and the estimated delivery date for all items in the cart that are also available in the products table.",
+          "Query": "SELECT cart.discounted_total_price, cart.estimated_delivery_date FROM cart JOIN products ON cart.fk_product_id = products.unique_product_identifier;"
+        },
+        {
+          "NL": "Find the total loyalty points earned by customers who have made transactions in the last month and have an anniversary reward voucher status of true",
+          "Query": "SELECT SUM(T1.accumulated_loyalty_points_balance) FROM customers_loyalty_program AS T1 JOIN transactions_and_payments AS T2 ON T1.associated_customer_reference_id = T2.corresponding_customer_reference_identifier WHERE T2.transaction_date_and_time > NOW() - INTERVAL '1 month' AND T1.anniversary_reward_voucher_status = TRUE"
+        },
+        {
+          "NL": "Find all users who have 'free shipping eligibility' as true and also have products in the wishlist which are currently out of stock.",
+          "Query": "SELECT T1.associated_customer_reference_id FROM customers_loyalty_program AS T1 JOIN wishlist AS T2 ON T1.associated_customer_reference_id = T2.fk_user_id WHERE T1.free_shipping_eligibility = TRUE AND T2.stock_status_at_addition = FALSE"
+        },
+        {
+          "NL": "Find the number of events where the event type is 'ORDER_COMPLETION' and the device platform is 'ANDROID', and the customer has also left a review with 5 stars. Then, group these events by the event timestamp and find the total number of such events for each group. Finally, find the top 5 results with the highest total number of events.",
+          "Query": "SELECT COUNT(*) AS total_events, T1.event_timestamp FROM events AS T1 INNER JOIN product_reviews_and_ratings AS T2 ON T1.person_customer_id = T2.reviewing_customer_identifier WHERE T1.event_type = 'ORDER_COMPLETION' AND T1.device_platform = 'ANDROID' AND T2.submitted_review_star_rating = 5 GROUP BY T1.event_timestamp ORDER BY total_events DESC LIMIT 5"
+        },
+        {
+          "NL": "Find the total shipping costs and the estimated delivery dates for orders that were part of successful campaigns (ROI > 100%) and had at least one item that was part of a refund request. Include the campaign name, shipping carrier, and the total price of items in the order.",
+          "Query": "SELECT SUM(sh.shipping_cost) AS total_shipping_costs, sh.estimated_delivery, c.campaign_name, sh.carrier, SUM(oi.total_price) AS total_order_price FROM shipping sh JOIN order_items oi ON sh.fk_order_id = oi.order_id JOIN campaigns c ON oi.order_id = c.campaign_id JOIN refunds_returns rr ON oi.order_id = rr.fk_order_id WHERE c.roi > 100 AND rr.id IS NOT NULL GROUP BY sh.estimated_delivery, c.campaign_name, sh.carrier"
+        }
+]
